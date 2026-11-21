@@ -55,6 +55,28 @@ public class ProjectileManager : MonoBehaviour
             yield return new WaitForSeconds(.05f);
         }
     }
+
+    public IEnumerator burstPattern(Vector3 origin)
+    {
+        float angle = 0f;
+
+        for (int i = 0; i < 10; i++)
+        {
+            // Spawn projectile logic here
+
+            for (int x = 0; x < 36; x++)
+            {
+                GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+                clone.transform.position = origin;
+                clone.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            }
+
+            angle += 2f;
+
+            yield return new WaitForSeconds(.2f);
+        }
+    }
+
     public IEnumerator circlePattern(Vector3 origin)
     {
         float angle = 0f;
