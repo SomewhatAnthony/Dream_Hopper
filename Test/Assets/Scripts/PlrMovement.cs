@@ -3,11 +3,8 @@ using UnityEngine.InputSystem;
 
 public class PlrMovement : MonoBehaviour
 {
-
-    private float moveSpeed = 5f;
+    public float moveSpeed = 5f;
     private Rigidbody2D rb;
-    private Vector2 moveInput;
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,11 +15,12 @@ public class PlrMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+
+
+
         rb.linearVelocity = moveInput * moveSpeed;
+
     }
 
-    public void Move(InputAction.CallbackContext context)
-    {
-        moveInput = context.ReadValue<Vector2>();
-    }
 }
