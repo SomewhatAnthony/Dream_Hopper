@@ -40,6 +40,8 @@ public class PlrHealthManager : MonoBehaviour
             currentLives--;
             nextHitTime = Time.time + invincibilityDuration;
 
+            StartCoroutine(InvincibilityFrames());
+
             // switch currentLifeUI's gameobject image to the next one in the array
 
 
@@ -49,5 +51,17 @@ public class PlrHealthManager : MonoBehaviour
 
             } 
         }
+    }
+
+    IEnumerator InvincibilityFrames()
+    {
+        // make player blink for a few seconds to indicate invincibility
+        for (int i = 0; i < 12; i++) {
+            GetComponent<SpriteRenderer>().enabled = false;
+            yield return new WaitForSeconds(invincibilityDuration / (5 * 2));
+            GetComponent<SpriteRenderer>().enabled = true;
+            yield return new WaitForSeconds(invincibilityDuration / (5 * 2));
+        }
+
     }
 }
