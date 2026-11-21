@@ -9,47 +9,49 @@ public class PlrHealthManager : MonoBehaviour
 
     public SpriteRenderer PlayerSprite;
     public Sprite[] LivesImages;
-    public GameObject currentHealthObject; 
+    public RectTransform currentHealthObject; // Changed from GameObject to RectTransform
+    public ParticleSystem damageParticlesUI;
 
     public float invincibilityDuration = 2f; // Duration of invincibility in seconds
     public float nextHitTime; // Time when the player can be hit again
 
-    private Vector3 originalPos;
+    private Vector2 originalPos; // position of the UI health object
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        nextHitTime = Time.time; // Initialize nextHitTime to the current time
+        nextHitTime = Time.time; 
         currentLives = maxLives;
 
-        originalPos = currentHealthObject.transform.position;
+        originalPos = currentHealthObject.anchoredPosition;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Hurt") && Time.time >= nextHitTime)
         {
-            // Handle collision with projectile
             Debug.Log("Player hit by projectile!");
 
             Destroy(collision.gameObject); // delete projectile
 
             // lose life, activate invincibility frames
-
             currentLives--;
             nextHitTime = Time.time + invincibilityDuration;
 
             StartCoroutine(InvincibilityFrames());
-            StartCoroutine(ShakeRoutine(0.4f, 0.1f));
+            StartCoroutine(ShakeRoutine(0.4f, 10f)); // Note: UI pixels require a larger magnitude than world units!
 
-            // switch currentLifeUI's gameobject image to the next one in the array
+            damageParticlesUI.Play();
 
-            currentHealthObject.GetComponent<Image>().sprite = LivesImages[currentLives];
+            // Prevent an IndexOutOfRangeException if currentLives drops below 0
+            if (currentLives >= 0 && currentLives < LivesImages.Length)
+            {
+                currentHealthObject.GetComponent<Image>().sprite = LivesImages[currentLives];
+            }
 
-            if (currentLives <= 0) {
+            if (currentLives <= 0)
+            {
                 Debug.Log("Player has no lives left!");
-
-            } 
+            }
         }
     }
 
@@ -61,22 +63,16 @@ public class PlrHealthManager : MonoBehaviour
 
         while (elapsed < invincibilityDuration)
         {
-            // I frames 
             float currentDelay = (elapsed < firstIFrames) ? normalDelay / 2f : normalDelay;
 
             PlayerSprite.enabled = false;
-            
             yield return new WaitForSeconds(currentDelay);
-            
             elapsed += currentDelay;
 
-            // Prevent overshooting the total duration if time runs out mid-blink
             if (elapsed >= invincibilityDuration) break;
 
             PlayerSprite.enabled = true;
-            
             yield return new WaitForSeconds(currentDelay);
-            
             elapsed += currentDelay;
         }
 
@@ -85,21 +81,28 @@ public class PlrHealthManager : MonoBehaviour
 
     IEnumerator ShakeRoutine(float duration, float magnitude)
     {
-
         float elapsed = 0f;
+        Vector3 originalCamPos = Camera.main.transform.position;
 
         while (elapsed < duration)
         {
             float x = Random.Range(-1f, 1f) * magnitude;
             float y = Random.Range(-1f, 1f) * magnitude;
 
-            currentHealthObject.transform.position = originalPos + new Vector3(x, y, 0f);
+            // Shake UI using anchoredPosition (in pixels)
+            currentHealthObject.anchoredPosition = originalPos + new Vector2(x, y);
+
+            // Shake Camera using a smaller scale so the screen doesn't fly off
+            float camX = x * 0.01f;
+            float camY = y * 0.01f;
+            Camera.main.transform.position = originalCamPos + new Vector3(camX, camY, 0);
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        // Snap back to the exact starting position
-        currentHealthObject.transform.position = originalPos;
+        // Snap both back to their exact starting positions
+        currentHealthObject.anchoredPosition = originalPos;
+        Camera.main.transform.position = originalCamPos;
     }
 }
