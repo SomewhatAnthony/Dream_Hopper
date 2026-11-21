@@ -5,17 +5,18 @@ using static UnityEngine.UI.Image;
 public class ProjectileManager : MonoBehaviour
 {
     public GameObject projectilePrefab;
+    public GameObject nightmare;
     bool patternActive = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartCoroutine(crossPattern(Vector3.zero));
+        StartCoroutine(crossPattern(nightmare.transform));
 
         Debug.Log("asdfasdf");
     }
 
-    public IEnumerator crazyPattern(Vector3 origin)
+    public IEnumerator crazyPattern(Transform origin)
     {
         patternActive = true;
         float angle = 0f;
@@ -27,7 +28,7 @@ public class ProjectileManager : MonoBehaviour
             for (int x = 0; x<5; x++)
             {
                 GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-                clone.transform.position = origin;
+                clone.transform.position = origin.position;
                 clone.transform.rotation = Quaternion.Euler(0f, 0f, angle+(x*73f));
             }
            
@@ -38,7 +39,7 @@ public class ProjectileManager : MonoBehaviour
         patternActive = false;
     }
 
-    public IEnumerator crossPattern(Vector3 origin)
+    public IEnumerator crossPattern(Transform origin)
     {
         patternActive = true;
         float angle = 0f;
@@ -50,7 +51,7 @@ public class ProjectileManager : MonoBehaviour
             for (int x = 0; x < 5; x++)
             {
                 GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-                clone.transform.position = origin;
+                clone.transform.position = origin.position;
                 clone.transform.rotation = Quaternion.Euler(0f, 0f, angle + (x * 73f));
             }
 
@@ -60,7 +61,7 @@ public class ProjectileManager : MonoBehaviour
         }
     }
 
-    public IEnumerator burstPattern(Vector3 origin)
+    public IEnumerator burstPattern(Transform origin)
     {
         float angle = 0f;
 
@@ -71,7 +72,7 @@ public class ProjectileManager : MonoBehaviour
             for (int x = 0; x < 36; x++)
             {
                 GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-                clone.transform.position = origin;
+                clone.transform.position = origin.position;
                 clone.transform.rotation = Quaternion.Euler(0f, 0f, angle);
             }
 
@@ -81,19 +82,19 @@ public class ProjectileManager : MonoBehaviour
         }
     }
 
-    public IEnumerator circlePattern(Vector3 origin)
+    public IEnumerator circlePattern(Transform origin)
     {
         float angle = 0f;
         for (int i = 0; i < 100; i++)
         {
             // Spawn projectile logic here
             GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            clone.transform.position = origin;
+            clone.transform.position = origin.position;
             clone.transform.rotation = Quaternion.Euler(0f, 0f, angle);
             clone.GetComponent<ProjectileScript>().speed = 3f;
 
             GameObject clone2 = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            clone2.transform.position = origin;
+            clone2.transform.position = origin.position;
             clone2.transform.rotation = Quaternion.Euler(0f, 0f, -angle-14);
             clone2.GetComponent<ProjectileScript>().speed = 2f;
             clone2.GetComponent<ProjectileScript>().lifeTime = 10f;

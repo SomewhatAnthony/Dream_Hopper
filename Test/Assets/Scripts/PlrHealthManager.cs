@@ -1,16 +1,19 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlrHealthManager : MonoBehaviour
 {
     public int maxLives = 3;
     public int currentLives;
 
-    public GameObject[] LivesObjects;
-    public GameObject CurrentLifeUI;
+    public Sprite[] LivesImages;
+    public GameObject currentHealthObject; 
 
     public float invincibilityDuration = 2f; // Duration of invincibility in seconds
     public float nextHitTime; // Time when the player can be hit again
+
+    private Vector3 originalPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,12 +21,7 @@ public class PlrHealthManager : MonoBehaviour
         nextHitTime = Time.time; // Initialize nextHitTime to the current time
         currentLives = maxLives;
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        originalPos = currentHealthObject.transform.position;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -41,10 +39,11 @@ public class PlrHealthManager : MonoBehaviour
             nextHitTime = Time.time + invincibilityDuration;
 
             StartCoroutine(InvincibilityFrames());
+            StartCoroutine(ShakeRoutine(0.4f, 0.1f));
 
             // switch currentLifeUI's gameobject image to the next one in the array
 
-
+            currentHealthObject.GetComponent<Image>().sprite = LivesImages[currentLives];
 
             if (currentLives <= 0) {
                 Debug.Log("Player has no lives left!");
@@ -55,13 +54,52 @@ public class PlrHealthManager : MonoBehaviour
 
     IEnumerator InvincibilityFrames()
     {
-        // make player blink for a few seconds to indicate invincibility
-        for (int i = 0; i < 12; i++) {
-            GetComponent<SpriteRenderer>().enabled = false;
-            yield return new WaitForSeconds(invincibilityDuration / (5 * 2));
-            GetComponent<SpriteRenderer>().enabled = true;
-            yield return new WaitForSeconds(invincibilityDuration / (5 * 2));
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        float elapsed = 0f;
+        float firstIFrames = invincibilityDuration / 4f; // the first quarter of I-frames is faster than the rest
+        float normalDelay = invincibilityDuration / 10f; // how long a frame of delay is
+
+        while (elapsed < invincibilityDuration)
+        {
+            // I frames 
+            float currentDelay = (elapsed < firstIFrames) ? normalDelay / 2f : normalDelay;
+
+            spriteRenderer.enabled = false;
+            
+            yield return new WaitForSeconds(currentDelay);
+            
+            elapsed += currentDelay;
+
+            // Prevent overshooting the total duration if time runs out mid-blink
+            if (elapsed >= invincibilityDuration) break;
+
+            spriteRenderer.enabled = true;
+            
+            yield return new WaitForSeconds(currentDelay);
+            
+            elapsed += currentDelay;
         }
 
+        spriteRenderer.enabled = true;
+    }
+
+    IEnumerator ShakeRoutine(float duration, float magnitude)
+    {
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float x = Random.Range(-1f, 1f) * magnitude;
+            float y = Random.Range(-1f, 1f) * magnitude;
+
+            currentHealthObject.transform.position = originalPos + new Vector3(x, y, 0f);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Snap back to the exact starting position
+        currentHealthObject.transform.position = originalPos;
     }
 }

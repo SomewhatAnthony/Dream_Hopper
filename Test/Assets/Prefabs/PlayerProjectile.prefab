@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5188065657244414598}
   m_Layer: 0
   m_Name: PlayerProjectile
-  m_TagString: Hurt
+  m_TagString: PlayerProjectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
