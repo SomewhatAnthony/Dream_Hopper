@@ -4,6 +4,7 @@ using System.Collections;
 public class ProjectileManager : MonoBehaviour
 {
     public GameObject projectilePrefab;
+    bool patternActive = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -15,6 +16,7 @@ public class ProjectileManager : MonoBehaviour
 
     public IEnumerator pattern1()
     {
+        patternActive = true;
         float angle = 0f;
         for (int i = 0; i < 50; i++)
         {
@@ -26,9 +28,11 @@ public class ProjectileManager : MonoBehaviour
 
             yield return new WaitForSeconds(.12f);
         }
+        patternActive = false;
     }
     public IEnumerator pattern2()
     {
+        patternActive = true;
         float angle = 0f;
         for (int i = 0; i < 50; i++)
         {
@@ -43,9 +47,8 @@ public class ProjectileManager : MonoBehaviour
             clone2.transform.rotation = Quaternion.Euler(0f, 0f, -angle);
 
             yield return new WaitForSeconds(.12f);
-
-
         }
+        patternActive = false;
     }
 
 

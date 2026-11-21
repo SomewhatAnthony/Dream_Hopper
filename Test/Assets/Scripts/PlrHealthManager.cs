@@ -38,11 +38,16 @@ public class PlrHealthManager : MonoBehaviour
             // lose life, activate invincibility frames
 
             currentLives--;
-            nextHitTime = Time.time + invincibilityDuration; 
+            nextHitTime = Time.time + invincibilityDuration;
 
             // switch currentLifeUI's gameobject image to the next one in the array
 
 
+
+            if (currentLives <= 0) {
+                Debug.Log("Player has no lives left!");
+
+            } 
         }
     }
 }
