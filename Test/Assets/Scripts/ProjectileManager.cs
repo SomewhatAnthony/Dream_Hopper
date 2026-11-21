@@ -28,7 +28,7 @@ public class ProjectileManager : MonoBehaviour
             for (int x = 0; x<5; x++)
             {
                 GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-                clone.transform.position = origin.position;
+                clone.transform.position = origin.position + new Vector3(0f, 0f, 10f);
                 clone.transform.rotation = Quaternion.Euler(0f, 0f, angle+(x*73f));
             }
            
@@ -51,7 +51,7 @@ public class ProjectileManager : MonoBehaviour
             for (int x = 0; x < 5; x++)
             {
                 GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-                clone.transform.position = origin.position;
+                clone.transform.position = origin.position + new Vector3(0f, 0f, 10f);
                 clone.transform.rotation = Quaternion.Euler(0f, 0f, angle + (x * 73f));
             }
 
@@ -72,7 +72,7 @@ public class ProjectileManager : MonoBehaviour
             for (int x = 0; x < 36; x++)
             {
                 GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-                clone.transform.position = origin.position;
+                clone.transform.position = origin.position + new Vector3(0f, 0f, 10f);
                 clone.transform.rotation = Quaternion.Euler(0f, 0f, angle);
             }
 
@@ -89,12 +89,12 @@ public class ProjectileManager : MonoBehaviour
         {
             // Spawn projectile logic here
             GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            clone.transform.position = origin.position;
+            clone.transform.position = origin.position + new Vector3(0f, 0f, 10f);
             clone.transform.rotation = Quaternion.Euler(0f, 0f, angle);
             clone.GetComponent<ProjectileScript>().speed = 3f;
 
             GameObject clone2 = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            clone2.transform.position = origin.position;
+            clone2.transform.position = origin.position + new Vector3(0f, 0f, 10f);
             clone2.transform.rotation = Quaternion.Euler(0f, 0f, -angle-14);
             clone2.GetComponent<ProjectileScript>().speed = 2f;
             clone2.GetComponent<ProjectileScript>().lifeTime = 10f;

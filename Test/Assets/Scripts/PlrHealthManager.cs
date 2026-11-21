@@ -7,6 +7,7 @@ public class PlrHealthManager : MonoBehaviour
     public int maxLives = 3;
     public int currentLives;
 
+    public SpriteRenderer PlayerSprite;
     public Sprite[] LivesImages;
     public GameObject currentHealthObject; 
 
@@ -54,7 +55,6 @@ public class PlrHealthManager : MonoBehaviour
 
     IEnumerator InvincibilityFrames()
     {
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         float elapsed = 0f;
         float firstIFrames = invincibilityDuration / 4f; // the first quarter of I-frames is faster than the rest
         float normalDelay = invincibilityDuration / 10f; // how long a frame of delay is
@@ -64,7 +64,7 @@ public class PlrHealthManager : MonoBehaviour
             // I frames 
             float currentDelay = (elapsed < firstIFrames) ? normalDelay / 2f : normalDelay;
 
-            spriteRenderer.enabled = false;
+            PlayerSprite.enabled = false;
             
             yield return new WaitForSeconds(currentDelay);
             
@@ -73,14 +73,14 @@ public class PlrHealthManager : MonoBehaviour
             // Prevent overshooting the total duration if time runs out mid-blink
             if (elapsed >= invincibilityDuration) break;
 
-            spriteRenderer.enabled = true;
+            PlayerSprite.enabled = true;
             
             yield return new WaitForSeconds(currentDelay);
             
             elapsed += currentDelay;
         }
 
-        spriteRenderer.enabled = true;
+        PlayerSprite.enabled = true;
     }
 
     IEnumerator ShakeRoutine(float duration, float magnitude)
