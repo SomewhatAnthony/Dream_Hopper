@@ -27,6 +27,10 @@ public class PlrMovement : MonoBehaviour
         {
             // Handle collision with projectile
             Debug.Log("Player hit by projectile!");
+
+            Destroy(collision.gameObject); // delete projectile
+
+            // lose life, activate invincibility frames
         }
     }
 
