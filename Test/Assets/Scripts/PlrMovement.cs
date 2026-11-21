@@ -6,6 +6,7 @@ public class PlrMovement : MonoBehaviour
     public float moveSpeed = 5f;
     private Rigidbody2D rb;
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,17 +22,6 @@ public class PlrMovement : MonoBehaviour
 
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Hurt"))
-        {
-            // Handle collision with projectile
-            Debug.Log("Player hit by projectile!");
 
-            Destroy(collision.gameObject); // delete projectile
-
-            // lose life, activate invincibility frames
-        }
-    }
 
 }
