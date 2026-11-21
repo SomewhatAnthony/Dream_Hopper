@@ -17,10 +17,17 @@ public class PlrMovement : MonoBehaviour
     {
         Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
-
-
         rb.linearVelocity = moveInput * moveSpeed;
 
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Hurt"))
+        {
+            // Handle collision with projectile
+            Debug.Log("Player hit by projectile!");
+        }
     }
 
 }
