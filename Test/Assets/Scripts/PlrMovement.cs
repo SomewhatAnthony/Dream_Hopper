@@ -28,6 +28,14 @@ public class PlrMovement : MonoBehaviour
     private Vector3 initialChildPos;
     private float bounceTimer;
 
+
+    [Header("Background Parallax")]
+    public Transform background;
+    [Range(0f, 0.5f)]
+    public float parallaxStrength = 0.05f;
+    private Vector3 initialBgPos;
+    private Vector3 camCenter;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -48,6 +56,11 @@ public class PlrMovement : MonoBehaviour
         if (visualChild != null)
         {
             initialChildPos = visualChild.localPosition;
+        }
+
+        if (background != null)
+        {
+            initialBgPos = background.position;
         }
     }
 
@@ -97,6 +110,17 @@ public class PlrMovement : MonoBehaviour
         if (!isDashing)
         {
             rb.linearVelocity = moveInput * moveSpeed;
+        }
+    }
+
+    void LateUpdate()
+    {
+        // Move the background slightly opposite to the player's position after physics/movement finishes
+        if (background != null)
+        {
+            Vector3 playerOffset = new Vector3(transform.position.x - camCenter.x, transform.position.y - camCenter.y, 100f);
+            Vector3 targetBgPos = initialBgPos - (playerOffset * parallaxStrength);
+            background.position = Vector3.Lerp(background.position, targetBgPos, Time.deltaTime * 10f);
         }
     }
 
