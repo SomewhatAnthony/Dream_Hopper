@@ -18,6 +18,14 @@ public class PlrMovement : MonoBehaviour
     public bool isDashing = false;
     private float nextDashTime = 0f;
 
+    [Header("Bounce Settings")]
+    public Transform visualChild;
+    public float bounceSpeed = 12f;
+    public float bounceHeight = 0.15f;
+
+    private Vector3 initialChildPos;
+    private float bounceTimer;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -30,6 +38,11 @@ public class PlrMovement : MonoBehaviour
         }
         nextDashTime = Time.time;
         CalculateCameraBounds();
+
+        if (visualChild != null)
+        {
+            initialChildPos = visualChild.localPosition;
+        }
     }
     void CalculateCameraBounds()
     {
@@ -50,11 +63,26 @@ public class PlrMovement : MonoBehaviour
     void Update()
     {
 
-
-
         moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
-        //rb.linearVelocity = moveInput * moveSpeed;
+        if (visualChild == null) return;
+        
+
+        if (moveInput != Vector2.zero)
+        {
+            // Advance the timer and calculate an upward-only sine wave hop
+            bounceTimer += Time.deltaTime * bounceSpeed;
+            float bounceOffset = Mathf.Abs(Mathf.Sin(bounceTimer)) * bounceHeight;
+
+            visualChild.localPosition = initialChildPos + new Vector3(0f, bounceOffset, 0f);
+        }
+        else
+        {
+            // Reset the timer and smoothly return to the ground when idle
+            bounceTimer = 0f;
+            visualChild.localPosition = Vector3.Lerp(visualChild.localPosition, initialChildPos, Time.deltaTime * 15f);
+        }
+        
 
     }
     void FixedUpdate()
@@ -79,7 +107,6 @@ public class PlrMovement : MonoBehaviour
         // Check for "Dash" button press and verify the cooldown has passed
         if (Input.GetButtonDown("Dash") && Time.time >= nextDashTime)
         {
-            Debug.Log("Dash activated!");
             StartCoroutine(Dash());
         }
         // Keep physics velocity updates in FixedUpdate for smoother collisions

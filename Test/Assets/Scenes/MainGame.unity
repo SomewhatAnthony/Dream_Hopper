@@ -604,7 +604,7 @@ Transform:
   m_GameObject: {fileID: 974255474}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0112, y: -0.86, z: -1.28}
+  m_LocalPosition: {x: 0.0112, y: -1.01, z: -1.28}
   m_LocalScale: {x: 0.36000004, y: 0.36000004, z: 0.36000004}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -628,6 +628,9 @@ MonoBehaviour:
   dashDuration: 0.15
   dashCooldown: 1
   isDashing: 0
+  visualChild: {fileID: 1928206672}
+  bounceSpeed: 10
+  bounceHeight: 1
 --- !u!70 &974255479
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -3389,7 +3392,7 @@ Transform:
   m_GameObject: {fileID: 1928206671}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.13, z: 3.555555}
+  m_LocalPosition: {x: 0, y: -0.18, z: 3.555555}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []

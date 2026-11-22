@@ -23,6 +23,29 @@ public class PlrHealthManager : MonoBehaviour
         currentLives = maxLives;
 
         originalPos = currentHealthObject.anchoredPosition;
+
+    }
+
+    public void damagePlayer() {
+        // lose life, activate invincibility frames
+        currentLives--;
+        nextHitTime = Time.time + invincibilityDuration;
+
+        StartCoroutine(InvincibilityFrames());
+        StartCoroutine(ShakeRoutine(0.4f, 10f)); // Note: UI pixels require a larger magnitude than world units!
+
+        damageParticlesUI.Play();
+
+        // Prevent an IndexOutOfRangeException if currentLives drops below 0
+        if (currentLives >= 0 && currentLives < LivesImages.Length)
+        {
+            currentHealthObject.GetComponent<Image>().sprite = LivesImages[currentLives];
+        }
+
+        if (currentLives <= 0)
+        {
+            Debug.Log("Player has no lives left!");
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -33,25 +56,7 @@ public class PlrHealthManager : MonoBehaviour
 
             Destroy(collision.gameObject); // delete projectile
 
-            // lose life, activate invincibility frames
-            currentLives--;
-            nextHitTime = Time.time + invincibilityDuration;
-
-            StartCoroutine(InvincibilityFrames());
-            StartCoroutine(ShakeRoutine(0.4f, 10f)); // Note: UI pixels require a larger magnitude than world units!
-
-            damageParticlesUI.Play();
-
-            // Prevent an IndexOutOfRangeException if currentLives drops below 0
-            if (currentLives >= 0 && currentLives < LivesImages.Length)
-            {
-                currentHealthObject.GetComponent<Image>().sprite = LivesImages[currentLives];
-            }
-
-            if (currentLives <= 0)
-            {
-                Debug.Log("Player has no lives left!");
-            }
+            
         }
     }
 
