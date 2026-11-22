@@ -1,2 +1,15 @@
 fileFormatVersion: 2
 guid: 9b748ad0e07fab24ea13d182a818164c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - PlayerSprite: {instanceID: 0}
+  - currentHealthObject: {instanceID: 0}
+  - damageParticlesUI: {instanceID: 0}
+  - hurtSound: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
