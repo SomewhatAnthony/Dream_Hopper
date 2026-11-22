@@ -5,7 +5,7 @@ public class PlrShooting : MonoBehaviour
 
     public GameObject projectilePrefab;
 
-    public float fireRate = 1f / 8f; // cap fire rate
+    public float fireRate = 1f / 6f; // cap fire rate
     private float nextFireTime = 0f; // time when the player can fire again
 
     void Start() {
