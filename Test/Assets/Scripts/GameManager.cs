@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
     public bool GameInPlay;
     public Text scoreText;
 
+    public AudioClip hurtSound; // Drag your hurt .wav file here in the Inspector
+
+
     void Start()
     {
         nightmaresDefeated = 0;
@@ -66,6 +69,8 @@ public class GameManager : MonoBehaviour
 
     public void winGame() {
         nightmaresDefeated += 1;
+
+        AudioSource.PlayClipAtPoint(hurtSound, Camera.main.transform.position);
 
         GameInPlay = false;
 

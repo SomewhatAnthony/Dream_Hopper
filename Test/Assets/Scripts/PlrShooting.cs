@@ -7,7 +7,7 @@ public class PlrShooting : MonoBehaviour
 
     public GameObject projectilePrefab;
 
-    public float fireRate = 1f / 6f; // cap fire rate
+    public float fireRate = 0.1f; // cap fire rate
     private float nextFireTime = 0f; // time when the player can fire again
 
     public Sprite shootSprite;
@@ -30,6 +30,7 @@ public class PlrShooting : MonoBehaviour
             // Spawn projectile logic here
             GameObject projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
             projectile.transform.rotation = Quaternion.Euler(0f, 0f, 0f); // Rotate the projectile to face upwards
+            projectile.GetComponent<ProjectileScript>().speed = 10f; // Set the speed of the projectile
             projectile.GetComponent<ProjectileScript>().lifeTime = 4f;
             
             nextFireTime = Time.time + fireRate;

@@ -327,6 +327,7 @@ MonoBehaviour:
   nightmare: {fileID: 0}
   GameInPlay: 0
   scoreText: {fileID: 0}
+  hurtSound: {fileID: 8300000, guid: 83c85707bc23b6348b4ce88b68c0b595, type: 3}
 --- !u!1 &985884202
 GameObject:
   m_ObjectHideFlags: 0

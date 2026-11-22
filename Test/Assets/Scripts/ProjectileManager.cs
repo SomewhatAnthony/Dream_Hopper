@@ -66,6 +66,9 @@ public class ProjectileManager : MonoBehaviour
 
         for (int i = 0; i < 150; i++)
         {
+
+            if (GameManager.Instance.GameInPlay == false) { yield break; } // exit the loop if the game is not in play
+
             // Spawn projectile logic here
 
             for (int x = 0; x<5; x++)
@@ -91,6 +94,9 @@ public class ProjectileManager : MonoBehaviour
         {
             // Spawn projectile logic here
 
+            if (GameManager.Instance.GameInPlay == false) { yield break; } // exit the loop if the game is not in play
+
+
             for (int x = 0; x < 5; x++)
             {
                 GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
@@ -112,6 +118,9 @@ public class ProjectileManager : MonoBehaviour
         {
             // Spawn projectile logic here
 
+            if (GameManager.Instance.GameInPlay == false) { yield break; } // exit the loop if the game is not in play
+
+
             for (int x = 0; x < 36; x++)
             {
                 GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
@@ -130,6 +139,9 @@ public class ProjectileManager : MonoBehaviour
         float angle = 0f;
         for (int i = 0; i < 100; i++)
         {
+
+            if (GameManager.Instance.GameInPlay == false) { yield break; } // exit the loop if the game is not in play
+
             // Spawn projectile logic here
             GameObject clone = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
             clone.transform.position = origin.position + new Vector3(0f, 0f, 10f);
