@@ -15,6 +15,9 @@ public class PlrHealthManager : MonoBehaviour
     public float invincibilityDuration = 2f; // Duration of invincibility in seconds
     public float nextHitTime; // Time when the player can be hit again
 
+    public AudioClip hurtSound; // Drag your hurt .wav file here in the Inspector
+    private AudioSource audioSource;
+
     private Vector2 originalPos; // position of the UI health object
 
     void Start()
@@ -23,6 +26,9 @@ public class PlrHealthManager : MonoBehaviour
         currentLives = maxLives;
 
         originalPos = currentHealthObject.anchoredPosition;
+        
+        audioSource = GetComponent<AudioSource>();
+
 
     }
 
@@ -31,6 +37,10 @@ public class PlrHealthManager : MonoBehaviour
         if (collision.gameObject.CompareTag("Hurt") && Time.time >= nextHitTime)
         {
             Debug.Log("Player hit by projectile!");
+            
+            if (hurtSound != null){
+                AudioSource.PlayClipAtPoint(hurtSound, Camera.main.transform.position);
+            }
 
             Destroy(collision.gameObject); // delete projectile
 

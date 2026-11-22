@@ -695,6 +695,7 @@ MonoBehaviour:
   damageParticlesUI: {fileID: 1579057236}
   invincibilityDuration: 2
   nextHitTime: 0
+  hurtSound: {fileID: 8300000, guid: f415e13c73fce1c438cd90819a3047ee, type: 3}
 --- !u!114 &974255481
 MonoBehaviour:
   m_ObjectHideFlags: 0
