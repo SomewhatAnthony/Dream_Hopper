@@ -36,11 +36,11 @@ public class ProjectileManager : MonoBehaviour
                 case 3:
                     yield return StartCoroutine(circlePattern(nightmare.transform));
                     break;
-            
+            }
         }
     }
 
-    public IEnumerator crazyPattern(Transform origin)
+    IEnumerator crazyPattern(Transform origin)
     {
         patternActive = true;
         float angle = 0f;
@@ -63,7 +63,7 @@ public class ProjectileManager : MonoBehaviour
         patternActive = false;
     }
 
-    public IEnumerator crossPattern(Transform origin)
+    IEnumerator crossPattern(Transform origin)
     {
         patternActive = true;
         float angle = 0f;
@@ -85,7 +85,7 @@ public class ProjectileManager : MonoBehaviour
         }
     }
 
-    public IEnumerator burstPattern(Transform origin)
+    IEnumerator burstPattern(Transform origin)
     {
         float angle = 0f;
 
@@ -106,7 +106,7 @@ public class ProjectileManager : MonoBehaviour
         }
     }
 
-    public IEnumerator circlePattern(Transform origin)
+    IEnumerator circlePattern(Transform origin)
     {
         float angle = 0f;
         for (int i = 0; i < 100; i++)
