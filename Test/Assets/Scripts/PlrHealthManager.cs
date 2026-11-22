@@ -28,7 +28,7 @@ public class PlrHealthManager : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Hurt") && Time.time >= nextHitTime)
+        if (collision.gameObject.CompareTag("Hurt") && Time.time >= nextHitTime && GameManager.Instance.GameInPlay)
         {
             Debug.Log("Player hit by projectile!");
 
@@ -52,6 +52,7 @@ public class PlrHealthManager : MonoBehaviour
             if (currentLives <= 0)
             {
                 Debug.Log("Player has no lives left!");
+                GameManager.Instance.loseGame();
             }
         }
     }

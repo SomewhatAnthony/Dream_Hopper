@@ -128,6 +128,7 @@ public class PlrMovement : MonoBehaviour
     {
         isDashing = true;
         nextDashTime = Time.time + dashCooldown;
+        GetComponent<PlrHealthManager>().nextHitTime = Time.time + dashDuration;
 
         Vector2 dashDir = (moveInput != Vector2.zero) ? moveInput : lastMoveDir;
         rb.linearVelocity = dashDir * dashSpeed;

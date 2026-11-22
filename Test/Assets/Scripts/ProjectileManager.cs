@@ -38,7 +38,15 @@ public class ProjectileManager : MonoBehaviour
                     break;
             }
 
-            yield return new WaitForSeconds(1.2f); // wait for 1 second before starting the next pattern
+            yield return new WaitForSeconds(0.8f); // wait for 1 second before starting the next pattern
+
+            if (GameManager.Instance.GameInPlay == false)  { yield break; } // exit the loop if the game is not in play
+            // hide the nightmare by moving it off screen to the bottom
+            nightmare.transform.position = new Vector3(0f, -1000f, 0f);
+
+            yield return new WaitForSeconds(0.4f);
+
+            if (GameManager.Instance.GameInPlay == false)  { yield break; } // exit the loop if the game is not in play
 
             // choose a random position for nightmare to move to
             Vector3 randomPosition = new Vector3(Random.Range(-7f, 7f), Random.Range(0f, 4.5f), 0f);
@@ -46,6 +54,8 @@ public class ProjectileManager : MonoBehaviour
             nightmare.transform.position = randomPosition;
 
             yield return new WaitForSeconds(1f);
+            if (GameManager.Instance.GameInPlay == false)  {  yield break; } // exit the loop if the game is not in play
+
         }
     }
 
