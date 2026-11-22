@@ -8,6 +8,8 @@ public class PlrMovement : MonoBehaviour
     private float halfWidth, halfHeight;
     private Rigidbody2D rb;
     private Vector2 moveInput;
+    private AudioSource audioSource;
+
 
     [Header("Dash Settings")]
     public float dashSpeed = 15f;
@@ -29,6 +31,8 @@ public class PlrMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
+
 
         // Checks parent and visualChild so camera clamping stays accurate
         SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
@@ -47,23 +51,12 @@ public class PlrMovement : MonoBehaviour
         }
     }
 
-    void CalculateCameraBounds()
-    {
-        Camera cam = Camera.main;
-
-        Vector2 bottomLeft = cam.ViewportToWorldPoint(new Vector3(0f, 0f, cam.nearClipPlane));
-        Vector2 topRight = cam.ViewportToWorldPoint(new Vector3(1f, 1f, cam.nearClipPlane));
-
-        minX = bottomLeft.x + halfWidth;
-        maxX = topRight.x - halfWidth;
-        minY = bottomLeft.y + halfHeight;
-        maxY = topRight.y - halfHeight;
-    }
 
     void Update()
     {
         // Read all player inputs in Update() so no button presses are ever dropped
         moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        HandleWalkingSound();
 
         if (moveInput != Vector2.zero)
         {
@@ -90,6 +83,7 @@ public class PlrMovement : MonoBehaviour
             visualChild.localPosition = Vector3.Lerp(visualChild.localPosition, initialChildPos, Time.deltaTime * 15f);
         }
     }
+
 
     void FixedUpdate()
     {
@@ -125,4 +119,33 @@ public class PlrMovement : MonoBehaviour
 
         isDashing = false;
     }
+    void CalculateCameraBounds()
+    {
+        Camera cam = Camera.main;
+
+        Vector2 bottomLeft = cam.ViewportToWorldPoint(new Vector3(0f, 0f, cam.nearClipPlane));
+        Vector2 topRight = cam.ViewportToWorldPoint(new Vector3(1f, 1f, cam.nearClipPlane));
+
+        minX = bottomLeft.x + halfWidth;
+        maxX = topRight.x - halfWidth;
+        minY = bottomLeft.y + halfHeight;
+        maxY = topRight.y - halfHeight;
+    }
+      void HandleWalkingSound()
+    {
+        if (audioSource == null) return;
+
+        // Check if the player is actively pressing movement keys
+        bool isMoving = moveInput.sqrMagnitude > 0.01f;
+
+        if (isMoving && !audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
+        else if (!isMoving && audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
+    }
 }
+
