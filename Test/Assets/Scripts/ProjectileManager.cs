@@ -12,9 +12,9 @@ public class ProjectileManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartCoroutine(crazyPattern(nightmare.transform));
-
         bossHealth = nightmare.GetComponent<NightmareHealth>();
+
+        StartCoroutine(game());
     }
 
     IEnumerator game() {
@@ -37,6 +37,15 @@ public class ProjectileManager : MonoBehaviour
                     yield return StartCoroutine(circlePattern(nightmare.transform));
                     break;
             }
+
+            yield return new WaitForSeconds(1.2f); // wait for 1 second before starting the next pattern
+
+            // choose a random position for nightmare to move to
+            Vector3 randomPosition = new Vector3(Random.Range(-7f, 7f), Random.Range(0f, 4.5f), 0f);
+
+            nightmare.transform.position = randomPosition;
+
+            yield return new WaitForSeconds(1f);
         }
     }
 
