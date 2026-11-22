@@ -59,13 +59,12 @@ public class PlrMovement : MonoBehaviour
     }
     void FixedUpdate()
     {
-        rb.linearVelocity = moveInput * moveSpeed;
-
         // Clamp the Rigidbody2D position directly to prevent physics jitter
         Vector2 clampedPos = rb.position;
         clampedPos.x = Mathf.Clamp(clampedPos.x, minX, maxX);
         clampedPos.y = Mathf.Clamp(clampedPos.y, minY, maxY);
         rb.position = clampedPos;
+
         // Prevent normal movement from overriding velocity while dashing
         if (isDashing) return;
 
