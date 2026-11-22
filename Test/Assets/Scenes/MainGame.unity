@@ -626,7 +626,7 @@ MonoBehaviour:
   moveSpeed: 3
   dashSpeed: 15
   dashDuration: 0.15
-  dashCooldown: 1
+  dashCooldown: 0.5
   isDashing: 0
   visualChild: {fileID: 1928206672}
   bounceSpeed: 10
@@ -706,6 +706,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   projectilePrefab: {fileID: 5012772423470147547, guid: 65f9f65f08b9b4e4093ace711e0c7d90, type: 3}
   fireRate: 0.16666667
+  shootSprite: {fileID: 0}
+  defaultSprite: {fileID: 0}
+  shootDuration: 0.3
 --- !u!1 &1450324708
 GameObject:
   m_ObjectHideFlags: 0

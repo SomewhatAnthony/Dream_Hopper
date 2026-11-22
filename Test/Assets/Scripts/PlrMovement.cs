@@ -14,7 +14,7 @@ public class PlrMovement : MonoBehaviour
     public float dashDuration = 0.15f;
     public float dashCooldown = 1f;
 
-    private Vector2 lastMoveDir = Vector2.right; 
+    private Vector2 lastMoveDir = Vector2.right;
     public bool isDashing = false;
     private float nextDashTime = 0f;
 
@@ -29,13 +29,15 @@ public class PlrMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+
+        // Checks parent and visualChild so camera clamping stays accurate
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
         if (sr != null)
         {
             halfWidth = sr.bounds.extents.x;
             halfHeight = sr.bounds.extents.y;
         }
+
         nextDashTime = Time.time;
         CalculateCameraBounds();
 
@@ -44,89 +46,82 @@ public class PlrMovement : MonoBehaviour
             initialChildPos = visualChild.localPosition;
         }
     }
+
     void CalculateCameraBounds()
     {
         Camera cam = Camera.main;
 
-        // Viewport (0,0) is bottom-left; (1,1) is top-right
         Vector2 bottomLeft = cam.ViewportToWorldPoint(new Vector3(0f, 0f, cam.nearClipPlane));
         Vector2 topRight = cam.ViewportToWorldPoint(new Vector3(1f, 1f, cam.nearClipPlane));
 
-        // Add padding using the sprite's half-size
         minX = bottomLeft.x + halfWidth;
         maxX = topRight.x - halfWidth;
         minY = bottomLeft.y + halfHeight;
         maxY = topRight.y - halfHeight;
-        
     }
 
     void Update()
     {
-
+        // Read all player inputs in Update() so no button presses are ever dropped
         moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
-        if (visualChild == null) return;
-        
-
-        if (moveInput != Vector2.zero)
-        {
-            // Advance the timer and calculate an upward-only sine wave hop
-            bounceTimer += Time.deltaTime * bounceSpeed;
-            float bounceOffset = Mathf.Abs(Mathf.Sin(bounceTimer)) * bounceHeight;
-
-            visualChild.localPosition = initialChildPos + new Vector3(0f, bounceOffset, 0f);
-        }
-        else
-        {
-            // Reset the timer and smoothly return to the ground when idle
-            bounceTimer = 0f;
-            visualChild.localPosition = Vector3.Lerp(visualChild.localPosition, initialChildPos, Time.deltaTime * 15f);
-        }
-        
-
-    }
-    void FixedUpdate()
-    {
-        // Clamp the Rigidbody2D position directly to prevent physics jitter
-        Vector2 clampedPos = rb.position;
-        clampedPos.x = Mathf.Clamp(clampedPos.x, minX, maxX);
-        clampedPos.y = Mathf.Clamp(clampedPos.y, minY, maxY);
-        rb.position = clampedPos;
-
-        // Prevent normal movement from overriding velocity while dashing
-        if (isDashing) return;
-
-        moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
-
-        // Remember the last direction moved so the player can still dash while standing still
         if (moveInput != Vector2.zero)
         {
             lastMoveDir = moveInput;
         }
 
-        // Check for "Dash" button press and verify the cooldown has passed
-        if (Input.GetButtonDown("Dash") && Time.time >= nextDashTime)
+        if (Input.GetButtonDown("Dash") && !isDashing && Time.time >= nextDashTime)
         {
             StartCoroutine(Dash());
         }
-        // Keep physics velocity updates in FixedUpdate for smoother collisions
+
+        // Bounce animation logic
+        if (visualChild == null) return;
+
+        if (moveInput != Vector2.zero && !isDashing)
+        {
+            bounceTimer += Time.deltaTime * bounceSpeed;
+            float bounceOffset = Mathf.Abs(Mathf.Sin(bounceTimer)) * bounceHeight;
+            visualChild.localPosition = initialChildPos + new Vector3(0f, bounceOffset, 0f);
+        }
+        else
+        {
+            bounceTimer = 0f;
+            visualChild.localPosition = Vector3.Lerp(visualChild.localPosition, initialChildPos, Time.deltaTime * 15f);
+        }
+    }
+
+    void FixedUpdate()
+    {
+        // Clamp position inside camera bounds
+        Vector2 clampedPos = rb.position;
+        clampedPos.x = Mathf.Clamp(clampedPos.x, minX, maxX);
+        clampedPos.y = Mathf.Clamp(clampedPos.y, minY, maxY);
+        rb.position = clampedPos;
+
+        // Only apply regular movement velocity when not dashing
         if (!isDashing)
         {
             rb.linearVelocity = moveInput * moveSpeed;
         }
     }
 
-
     IEnumerator Dash()
     {
         isDashing = true;
-        nextDashTime = Time.time + dashCooldown; 
+        nextDashTime = Time.time + dashCooldown;
 
-        // Dash in current input direction, or last faced direction if idle
         Vector2 dashDir = (moveInput != Vector2.zero) ? moveInput : lastMoveDir;
         rb.linearVelocity = dashDir * dashSpeed;
 
-        yield return new WaitForSeconds(dashDuration);
+        // WaitForFixedUpdate ensures the dash ends cleanly on a physics tick
+        float elapsed = 0f;
+        while (elapsed < dashDuration)
+        {
+            rb.linearVelocity = dashDir * dashSpeed;
+            elapsed += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
 
         isDashing = false;
     }

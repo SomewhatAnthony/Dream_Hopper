@@ -17,9 +17,9 @@ public class NightmareHealth : MonoBehaviour
         
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collision.gameObject.CompareTag("PlayerProjectile"))
+        if (collider.gameObject.CompareTag("PlayerProjectile"))
         {
             Health -= 1;
             
@@ -31,6 +31,8 @@ public class NightmareHealth : MonoBehaviour
 
                 Debug.Log("Nightmare defeated!");
             }
+
+            Destroy(collider.gameObject);
         }
     }
 }

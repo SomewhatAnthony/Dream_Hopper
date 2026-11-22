@@ -7,13 +7,37 @@ public class ProjectileManager : MonoBehaviour
     public GameObject projectilePrefab;
     public GameObject nightmare;
     bool patternActive = false;
+    private NightmareHealth bossHealth;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartCoroutine(crossPattern(nightmare.transform));
+        StartCoroutine(crazyPattern(nightmare.transform));
 
-        Debug.Log("asdfasdf");
+        bossHealth = nightmare.GetComponent<NightmareHealth>();
+    }
+
+    IEnumerator game() {
+        while (bossHealth.Health > 0)
+        {
+            // choose a random ienumerator pattern using a switch statement and random
+            int randomPattern = Random.Range(0, 4);
+            switch (randomPattern)
+            {
+                case 0:
+                    yield return StartCoroutine(crazyPattern(nightmare.transform));
+                    break;
+                case 1:
+                    yield return StartCoroutine(crossPattern(nightmare.transform));
+                    break;
+                case 2:
+                    yield return StartCoroutine(burstPattern(nightmare.transform));
+                    break;
+                case 3:
+                    yield return StartCoroutine(circlePattern(nightmare.transform));
+                    break;
+            
+        }
     }
 
     public IEnumerator crazyPattern(Transform origin)
